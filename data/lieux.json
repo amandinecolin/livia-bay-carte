@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "categories": {
+    "monument":   { "label": "Monuments",           "icon": "flag",         "color": "#d1b06b" },
+    "culture":    { "label": "Culture & arts",      "icon": "palette",      "color": "#a897d8" },
+    "nature":     { "label": "Plages & parcs",      "icon": "tree",         "color": "#7db58e" },
+    "transport":  { "label": "Transports",          "icon": "plane",        "color": "#80a8d0" },
+    "nuit":       { "label": "Bars & clubs",        "icon": "cocktail",     "color": "#d681ab" },
+    "restaurant": { "label": "Restaurants & cafés", "icon": "cutlery",      "color": "#e09c62" },
+    "commerce":   { "label": "Commerces",           "icon": "shopping-bag", "color": "#d5c36c" },
+    "affaires":   { "label": "Affaires & finance",  "icon": "briefcase",    "color": "#93a3b6" },
+    "hotel":      { "label": "Hôtels & motels",     "icon": "key",          "color": "#c9a582" },
+    "sante":      { "label": "Santé & secours",     "icon": "first-aid",    "color": "#db7a72" },
+    "justice":    { "label": "Police & justice",    "icon": "scale",        "color": "#a39783" },
+    "industrie":  { "label": "Port & industrie",    "icon": "anchor",       "color": "#6fb1a8" },
+    "garage":     { "label": "Garages & routes",    "icon": "wrench",       "color": "#b5ad86" }
+  },
+  "places": [
+    {
+      "id": "freedom-tower",
+      "name": "Freedom Tower",
+      "category": "monument",
+      "district": "crownline",
+      "landmark": true,
+      "lng": -80.1906, "lat": 25.7805,
+      "description": "Tour de style méditerranéen dressée face à la baie depuis les années 1920. Ancien siège de journal devenu symbole de l'accueil des exilés, elle tient bon au milieu des gratte-ciel de Crownline.",
+      "image": "", "link": ""
+    },
+    {
+      "id": "bayfront-park",
+      "name": "Bayfront Park",
+      "category": "nature",
+      "district": "crownline",
+      "landmark": true,
+      "lng": -80.1862, "lat": 25.7754,
+      "description": "Grand parc posé entre les tours et l'eau. Concerts en plein air, feux d'artifice du Nouvel An et joggeurs du petit matin s'y croisent.",
+      "image": "", "link": ""
+    },
+    {
+      "id": "perez-art-museum",
+      "name": "Pérez Art Museum",
+      "category": "culture",
+      "district": "crownline",
+      "landmark": true,
+      "lng": -80.1863, "lat": 25.7860,
+      "description": "Musée d'art moderne et contemporain aux jardins suspendus, ouvert sur la baie. Ses vernissages réunissent la scène artistique et les grandes fortunes de la ville.",
+      "image": "", "link": ""
+    },
+    {
+      "id": "wynwood-walls",
+      "name": "Wynwood Walls",
+      "category": "culture",
+      "icon": "brush",
+      "district": "nighttown",
+      "landmark": true,
+      "lng": -80.1997, "lat": 25.8011,
+      "description": "Anciens entrepôts recouverts de fresques géantes. Galeries, brasseries et ateliers d'artistes forment le cœur créatif de Nighttown.",
+      "image": "", "link": ""
+    },
+    {
+      "id": "ocean-drive",
+      "name": "Ocean Drive",
+      "category": "monument",
+      "icon": "sun",
+      "district": "nighttown",
+      "landmark": true,
+      "lng": -80.1305, "lat": 25.7795,
+      "description": "Le boulevard du front de mer, bordé d'hôtels Art déco aux néons pastel. Terrasses bondées, voitures de luxe au pas et fête jusqu'à l'aube.",
+      "image": "", "link": ""
+    },
+    {
+      "id": "south-pointe-park",
+      "name": "South Pointe Park",
+      "category": "nature",
+      "district": "nighttown",
+      "landmark": true,
+      "lng": -80.1335, "lat": 25.7659,
+      "description": "La pointe sud de la plage, face au chenal où passent les paquebots. Jetée, pelouses et couchers de soleil sur la baie.",
+      "image": "", "link": ""
+    },
+    {
+      "id": "domino-park",
+      "name": "Domino Park",
+      "category": "culture",
+      "icon": "clubs",
+      "district": "lowbank",
+      "landmark": true,
+      "lng": -80.2194, "lat": 25.7655,
+      "description": "Petit parc de Calle Ocho où les anciens jouent aux dominos à l'ombre, entre cafés cubains et marchands de cigares. Le pouls de Lowbank.",
+      "image": "", "link": ""
+    },
+    {
+      "id": "vizcaya",
+      "name": "Vizcaya",
+      "category": "culture",
+      "icon": "crown",
+      "district": null,
+      "landmark": true,
+      "lng": -80.2116, "lat": 25.7447,
+      "description": "Villa de style Renaissance italienne entourée de jardins, posée sur la baie. On y donne des réceptions, des mariages et des séances photo.",
+      "image": "", "link": ""
+    },
+    {
+      "id": "cape-florida-lighthouse",
+      "name": "Phare de Cape Florida",
+      "category": "monument",
+      "district": "mercer-key",
+      "landmark": true,
+      "lng": -80.1560, "lat": 25.6666,
+      "description": "Le plus vieux phare de la région, à la pointe sud de l'archipel, au bout d'un parc naturel préservé.",
+      "image": "", "link": ""
+    },
+    {
+      "id": "crandon-park-beach",
+      "name": "Crandon Park Beach",
+      "category": "nature",
+      "icon": "sun",
+      "district": "mercer-key",
+      "landmark": true,
+      "lng": -80.1566, "lat": 25.6916,
+      "description": "Longue plage aux eaux calmes bordée de palmiers. Familles le week-end, marinas privées à deux pas.",
+      "image": "", "link": ""
+    },
+    {
+      "id": "port-de-croisiere",
+      "name": "Port de croisière",
+      "category": "transport",
+      "icon": "ship",
+      "district": "calder-docks",
+      "landmark": true,
+      "lng": -80.1745, "lat": 25.7772,
+      "description": "Les paquebots géants accostent sur l'île du port, à côté des grues et des conteneurs de Calder Docks. Des milliers de touristes y passent chaque jour, et pas seulement eux.",
+      "image": "", "link": ""
+    },
+    {
+      "id": "aeroport-livia-bay",
+      "name": "Aéroport international de Livia Bay",
+      "category": "transport",
+      "district": "westline-county",
+      "landmark": true,
+      "lng": -80.2867, "lat": 25.7950,
+      "description": "La principale porte d'entrée de la ville, en bordure de Westline County. Motels, loueurs de voitures et entrepôts de fret s'étendent tout autour.",
+      "image": "", "link": ""
+    }
+  ]
+}

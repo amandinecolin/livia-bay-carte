@@ -1,0 +1,687 @@
+/* ==========================================================================
+   Livia Bay — carte interactive · V2
+   La carte n'a pas de couleurs à elle : elle lit les variables :root du forum
+   (feuille Forumactif chargée avant celle-ci dans index.html). Changer une
+   valeur dans le :root du forum suffit, la carte suit, en sombre comme en clair.
+   Les valeurs après la virgule ne servent que si la feuille du forum manque.
+   ========================================================================== */
+
+/* Police d'icônes cappuccicons : le serveur d'origine ne répond plus,
+   on pointe vers la copie hébergée avec la feuille de style. */
+@font-face {
+  font-family: "cappuccicons";
+  src: url("https://files.jcink.net/uploads2/leaptesting/cappuccicons_1.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+:root {
+  /* --- Correspondance avec le forum (ne rien coder en dur ici) --- */
+  --lb-encre: var(--contrast, #f6f4f5);          /* titres, encre forte */
+  --lb-texte: var(--textColor, #d6dbe0);         /* texte courant */
+  --lb-discret: var(--texte-discret, #a7b1ba);   /* méta, compteurs */
+  --lb-intitule: var(--bleu-texte, #b9c8d4);     /* intitulés mono */
+  --lb-ardoise: var(--ardoise, #778997);
+  --lb-voile: var(--neutral, #07090bbd);         /* fond des blocs */
+  --lb-voile-leger: var(--neutralDark, #ffffff0a);
+  --lb-voile-fort: var(--neutralDarker, #ffffff1a);
+  --lb-cadre: var(--border, 1px solid #ffffff24);
+  --lb-accent: var(--accentClr, #ff5fae);
+  --lb-accent-pastel: var(--rose-doux, #ffbedd);
+  --lb-accent-deep: var(--accentClrDark, #c2588c);
+  --lb-accent-voile: var(--rose-voile, #ff5fae29);
+  --lb-decalage: var(--shadow-decalage, 2px 2px 0 #ff5fae);
+  --lb-titre: var(--lb-clair-titre, var(--lb-encre));  /* en clair, titres framboise comme sur le forum */
+  --lb-bouton-fond: var(--lb-bande, #050607eb);
+  --lb-bouton-texte: var(--lb-sur-bande, #f6f4f5);
+  --lb-bouton-survol: var(--lb-rose, #ff5fae);
+  --lb-bouton-sur-survol: var(--lb-sur-rose, #07090b);
+  --lb-font-title: var(--font-display, "UnifrakturMaguntia", serif);
+  --lb-font-mono: var(--font-mono, "Share Tech Mono", monospace);
+  --lb-font-text: var(--font, "Inter", system-ui, sans-serif);
+  --lb-petit: var(--little-size, 11.5px);
+  --lb-normal: var(--normal-size, 13px);
+  --lb-moyen: var(--medium-size, 15px);
+  --lb-ease: var(--ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+  /* Le fond opaque de la carte = la teinte du voile des blocs, sans sa transparence
+     (noir bleuté en sombre, blanc en clair). */
+  --lb-fond: #07090b;
+
+  /* --- Fond de carte : tout est dérivé des encres du forum --- */
+  --lb-map-land: color-mix(in srgb, var(--lb-encre) 9%, var(--lb-fond));
+  --lb-map-sand: color-mix(in srgb, var(--lb-encre) 11%, var(--lb-fond));
+  --lb-map-park: color-mix(in srgb, var(--lb-ardoise) 9%, var(--lb-map-land));
+  --lb-map-water: color-mix(in srgb, var(--lb-ardoise) 7%, var(--lb-fond));
+  --lb-map-road-minor: color-mix(in srgb, var(--lb-encre) 15%, var(--lb-fond));
+  --lb-map-road-medium: color-mix(in srgb, var(--lb-encre) 25%, var(--lb-fond));
+  --lb-map-road-major: color-mix(in srgb, var(--lb-accent-deep) 22%, color-mix(in srgb, var(--lb-encre) 40%, var(--lb-fond)));
+  --lb-map-road-highway: color-mix(in srgb, var(--lb-accent-pastel) 35%, color-mix(in srgb, var(--lb-encre) 70%, var(--lb-fond)));
+  --lb-map-building: color-mix(in srgb, var(--lb-encre) 14%, var(--lb-fond));
+  --lb-map-label: var(--lb-discret);
+  --lb-map-label-halo: var(--lb-map-land);
+  --lb-map-water-label: var(--lb-accent-deep);
+  --lb-map-district-line: var(--lb-accent-pastel);
+  --lb-map-district-label: color-mix(in srgb, var(--lb-accent-pastel) 55%, var(--lb-encre));
+
+  /* Lune et soleil du bouton de thème (mêmes dessins que la barre du forum) */
+  --lb-icone-soleil: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/%3E%3C/svg%3E");
+  --lb-icone-lune: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z'/%3E%3C/svg%3E");
+}
+
+[data-color-scheme="light"] {
+  --lb-fond: #fcf2ef;
+  /* Même traitement que les titres gothiques du forum en clair : décalage gris bleuté */
+  --lb-decalage: 2px 2px 0 var(--lb-clair-decalage, var(--accentClr, #c21d6b));
+}
+
+/* Navigateurs récents : le fond est lu directement dans --neutral du forum */
+@supports (color: rgb(from red r g b)) {
+  :root, [data-color-scheme="light"] { --lb-fond: rgb(from var(--lb-voile) r g b / 1); }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* La feuille du forum pose une photo de fond sur la page : la carte la recouvre */
+html, body.lb {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--lb-map-land);
+  color: var(--lb-texte);
+  font-family: var(--lb-font-text);
+  font-size: var(--lb-normal);
+  -webkit-font-smoothing: antialiased;
+}
+body.lb::before { display: none; }
+
+:where(.lb) button { font: inherit; color: inherit; }
+
+/* La feuille du forum habille tous les <button> (bande noire, padding forcé) :
+   on repart de zéro pour ceux de la carte, chacun redonne ensuite son padding. */
+:where(.lb) button {
+  padding: 0 !important;
+  border-radius: 0;
+  background: none;
+  letter-spacing: normal;
+  text-transform: none;
+  line-height: normal;
+}
+
+.lb-map { position: fixed; inset: 0; }
+
+/* --- Panneau des lieux ---------------------------------------------------- */
+
+.lb-panel {
+  position: fixed;
+  top: 16px; left: 16px; bottom: 16px;
+  width: 352px;
+  display: flex;
+  flex-direction: column;
+  background: var(--lb-voile);
+  border: var(--lb-cadre);
+  border-radius: 0;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  overflow: hidden;
+  z-index: 3;
+  animation: lb-rise 0.6s var(--lb-ease) both;
+}
+
+.lb-panel__handle { display: none; }
+
+.lb-panel__head {
+  padding: 26px 26px 20px;
+  border-bottom: var(--lb-cadre);
+}
+
+.lb-brand__over {
+  display: block;
+  margin: 0;
+  font-family: var(--lb-font-mono);
+  font-size: var(--lb-petit);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lb-accent);
+}
+
+.lb-brand__title {
+  display: block;
+  text-align: left; /* la feuille du forum centre les h1 */
+  margin: 8px 0 0;
+  font-family: var(--lb-font-title);
+  font-weight: 400;
+  font-size: 58px;
+  line-height: 0.9;
+  text-transform: lowercase;
+  color: var(--lb-titre);
+  text-shadow: var(--lb-decalage);
+}
+
+.lb-brand__sub {
+  margin: 12px 0 0;
+  font-family: var(--lb-font-mono);
+  font-size: var(--lb-petit);
+  color: var(--lb-discret);
+}
+
+.lb-panel__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--lb-voile-fort) transparent;
+}
+
+.lb-section { padding: 18px 26px 4px; }
+.lb-section--list { flex: 1; padding-bottom: 18px; }
+
+/* Même intitulé mono que les blocs du forum */
+.lb-section__title {
+  margin: 0 0 10px;
+  font: 400 11px / 1.4 var(--lb-font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--lb-intitule);
+}
+.lb-section__title::before { content: "> "; color: var(--lb-accent); }
+
+.lb-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.lb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px !important;
+  border: 1px solid color-mix(in srgb, var(--lb-encre) 35%, transparent);
+  border-radius: 0;
+  background: transparent;
+  color: var(--lb-texte);
+  font: 400 12px / 1 var(--lb-font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+.lb-chip:hover { border-color: var(--lb-accent-pastel); color: var(--lb-encre); }
+.lb .lb-chip[aria-pressed="true"] { border-color: var(--lb-accent); color: var(--lb-accent); background: var(--lb-accent-voile); }
+.lb-chip .cp { font-size: 12px; line-height: 1; }
+.lb-chip__num {
+  font-family: var(--lb-font-mono);
+  font-size: 11px;
+  color: var(--lb-accent-deep);
+}
+.lb-chip[aria-pressed="true"] .lb-chip__num { color: var(--lb-accent); }
+
+.lb-district-note {
+  margin: 12px 0 2px;
+  padding-left: 12px;
+  border-left: 1px solid var(--lb-accent);
+  font-size: var(--lb-normal);
+  line-height: 1.5;
+  color: var(--lb-discret);
+  animation: lb-fade 0.35s ease both;
+}
+.lb-district-note::before {
+  content: "0" attr(data-num) " ";
+  font-family: var(--lb-font-mono);
+  color: var(--lb-accent);
+}
+
+.lb-list { list-style: none; margin: 0; padding: 0; border-top: var(--lb-cadre); }
+.lb-list li { border-bottom: var(--lb-cadre); }
+.lb-list li[hidden] { display: none; }
+
+.lb-row {
+  position: relative;
+  width: calc(100% + 16px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 -8px;
+  padding: 10px 8px !important;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.lb-row:hover, .lb-row[aria-current="true"] { background: var(--lb-voile-leger); }
+.lb-row[aria-current="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 8px; bottom: 8px;
+  width: 2px;
+  background: var(--lb-accent);
+}
+.lb-row__text { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.lb-row__name { font-weight: 500; color: var(--lb-encre); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.2s; }
+.lb-row[aria-current="true"] .lb-row__name { color: var(--lb-accent); }
+.lb-row__meta { font-family: var(--lb-font-mono); font-size: var(--lb-petit); color: var(--lb-discret); }
+.lb-row__district { letter-spacing: 0.12em; text-transform: uppercase; }
+.lb-row__category { text-transform: lowercase; }
+.lb-row:hover .lb-row__name { color: var(--lb-accent-pastel); }
+
+.lb-empty { padding: 12px 0; font-family: var(--lb-font-mono); font-size: 12px; color: var(--lb-discret); }
+
+.lb-symbol {
+  width: 30px; height: 30px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: var(--lb-cadre);
+  border-radius: 50%;
+  color: var(--lb-encre);
+  font-size: 15px;
+}
+
+/* --- Repères ------------------------------------------------------------- */
+
+.lb-pin {
+  /* position: absolute est fournie par MapLibre : ne pas la redéfinir */
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.lb-pin__dot {
+  display: grid;
+  place-items: center;
+  width: 28px; height: 28px;
+  border: 1.5px solid var(--lb-encre);
+  border-radius: 50%;
+  background: var(--lb-fond);
+  color: var(--lb-encre);
+  font-size: 14px;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.35);
+  transition: transform 0.25s cubic-bezier(.3,1.4,.5,1), opacity 0.3s, background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.3s;
+  animation: lb-pop 0.5s cubic-bezier(.3,1.4,.5,1) both;
+  animation-delay: calc(var(--i, 0) * 45ms + 250ms);
+}
+.lb-pin.is-landmark .lb-pin__dot { width: 32px; height: 32px; font-size: 16px; }
+
+.lb-pin:hover .lb-pin__dot, .lb-pin:focus-visible .lb-pin__dot {
+  transform: scale(1.12);
+  border-color: var(--lb-accent);
+  color: var(--lb-accent);
+  box-shadow: 0 0 0 4px var(--lb-accent-voile), 0 4px 14px rgb(0 0 0 / 0.35);
+}
+.lb-pin:focus-visible { outline: none; }
+
+.lb-pin.is-selected { z-index: 2; }
+.lb-pin.is-selected .lb-pin__dot { background: var(--lb-accent); border-color: var(--lb-accent); color: var(--lb-fond); transform: scale(1.15); }
+.lb-pin.is-selected::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 46px; height: 46px;
+  margin: -23px 0 0 -23px;
+  border-radius: 50%;
+  border: 1.5px solid var(--lb-accent);
+  animation: lb-ring 1.8s ease-out 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lb-pin__label {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--lb-font-mono);
+  font-size: var(--lb-petit);
+  color: var(--lb-encre);
+  text-shadow: 0 0 3px var(--lb-map-land), 0 0 6px var(--lb-map-land), 0 0 2px var(--lb-map-land);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, color 0.2s;
+}
+.lb-map.show-landmark-labels .lb-pin.is-landmark .lb-pin__label,
+.lb-map.show-labels .lb-pin__label,
+.lb-pin:hover .lb-pin__label,
+.lb-pin.is-selected .lb-pin__label { opacity: 1; }
+.lb-pin.is-selected .lb-pin__label { color: var(--lb-accent); }
+
+.lb-pin.is-hidden { pointer-events: none; }
+.lb-pin.is-hidden .lb-pin__dot { opacity: 0; transform: scale(0.5); }
+.lb-pin.is-hidden .lb-pin__label { opacity: 0 !important; }
+
+/* --- Fiche d'un lieu ------------------------------------------------------ */
+
+.lb-detail {
+  position: fixed;
+  top: 16px; right: 16px;
+  width: 352px;
+  max-height: calc(100% - 32px);
+  overflow-y: auto;
+  background: var(--lb-voile);
+  border: var(--lb-cadre);
+  border-radius: 0;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 4;
+  animation: lb-slide 0.4s var(--lb-ease) both;
+}
+.lb-detail[hidden] { display: none; }
+
+.lb-detail__close { position: absolute; top: 14px; right: 14px; z-index: 1; }
+
+/* Photo en noir et blanc, qui prend une teinte rose au survol */
+.lb-detail__figure { position: relative; margin: 0; background: var(--lb-fond); }
+.lb-detail__figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--lb-accent);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.lb-detail__figure:hover::after { opacity: 1; }
+.lb-detail__image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.08);
+}
+
+.lb-detail__body { padding: 22px 26px 26px; }
+
+.lb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--lb-font-mono);
+  font-size: var(--lb-petit);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--lb-accent);
+}
+.lb-badge .lb-symbol { width: 24px; height: 24px; font-size: 12px; }
+
+.lb-detail__name {
+  margin: 14px 40px 10px 0;
+  text-align: left;
+  font-family: var(--lb-font-title);
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1;
+  text-transform: lowercase;
+  color: var(--lb-titre);
+  text-shadow: var(--lb-decalage);
+}
+
+.lb-detail__district {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--lb-font-mono);
+  font-size: var(--lb-petit);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--lb-intitule);
+}
+.lb-detail__district .lb-dot { display: none; }
+.lb-detail__district::before { content: "//"; color: var(--lb-accent); }
+
+.lb-detail__desc {
+  margin: 18px 0 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--lb-texte);
+}
+
+/* Même bouton que le forum : bande noire en mono, rose au survol */
+.lb-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 9px 13px !important;
+  border: 0;
+  cursor: pointer;
+  background: var(--lb-bouton-fond);
+  color: var(--lb-bouton-texte);
+  font: 400 10.5px / 1 var(--lb-font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.lb-button::after { content: "→"; }
+.lb-button:hover { background: var(--lb-bouton-survol); color: var(--lb-bouton-sur-survol); box-shadow: 3px 3px 0 var(--lb-bouton-fond); }
+
+/* --- Outils du staff ------------------------------------------------------ */
+
+.lb-section__row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.lb-section__row .lb-section__title { margin-bottom: 10px; }
+
+/* Lien mono discret (ajouter, modifier, supprimer…) */
+.lb .lb-lien {
+  border: 0;
+  background: none;
+  color: var(--lb-accent);
+  font: 400 11px / 1 var(--lb-font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.lb .lb-lien:hover { color: var(--lb-encre); }
+
+.lb-detail__staff {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: var(--lb-cadre);
+}
+.lb-detail__staff-label {
+  margin-right: auto;
+  font: 400 10px / 1 var(--lb-font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--lb-intitule);
+}
+
+.lb-form .lb-detail__name { margin-bottom: 18px; }
+
+.lb-field { display: grid; gap: 6px; margin: 0 0 14px; }
+.lb-field__label {
+  font: 400 10.5px / 1.3 var(--lb-font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lb-intitule);
+}
+.lb-field input,
+.lb-field select,
+.lb-field textarea {
+  width: 100%;
+  margin: 0;
+  padding: 8px 10px;
+  border: var(--lb-cadre);
+  border-radius: 0;
+  background: var(--lb-voile-leger);
+  color: var(--lb-encre);
+  font: 400 13px / 1.45 var(--lb-font-text);
+  box-shadow: none;
+  transition: border-color 0.2s;
+}
+.lb-field textarea { resize: vertical; min-height: 90px; }
+.lb-field select option { background: var(--lb-fond); color: var(--lb-encre); }
+.lb-field input:focus,
+.lb-field select:focus,
+.lb-field textarea:focus { outline: none; border-color: var(--lb-accent); }
+
+.lb-form__hint {
+  margin: 4px 0 0;
+  padding-left: 12px;
+  border-left: 1px solid var(--lb-accent);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--lb-discret);
+}
+.lb-form__hint:empty { display: none; }
+.lb-form__error { margin: 12px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--lb-accent); }
+.lb-form__error[hidden] { display: none; }
+
+.lb-form__actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; }
+.lb-form__actions > * { white-space: nowrap; }
+.lb-form .lb-button { margin-top: 0; }
+.lb-form__actions { margin-top: 18px; }
+.lb .lb-button[disabled] { opacity: 0.5; cursor: progress; }
+
+/* Repère en cours de placement : rose, déplaçable */
+.lb-pin.is-draft { cursor: grab; z-index: 3; }
+.lb-pin.is-draft .lb-pin__dot { background: var(--lb-accent); border-color: var(--lb-accent); color: var(--lb-fond); animation: none; }
+.lb-pin.is-draft::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 46px; height: 46px;
+  margin: -23px 0 0 -23px;
+  border-radius: 50%;
+  border: 1.5px solid var(--lb-accent);
+  animation: lb-ring 1.8s ease-out infinite;
+  pointer-events: none;
+}
+
+/* --- Boutons de la carte -------------------------------------------------- */
+
+.lb-controls {
+  position: fixed;
+  right: 16px; bottom: 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 3;
+  animation: lb-fade 0.6s 0.3s ease both;
+}
+
+.lb .lb-icon-button {
+  width: 38px; height: 38px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 0;
+  background: var(--lb-bouton-fond);
+  color: var(--lb-bouton-texte) !important;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+.lb .lb-icon-button:hover { background: var(--lb-bouton-survol); color: var(--lb-bouton-sur-survol) !important; }
+.lb-icon-button--text { font-family: var(--lb-font-mono); font-size: 12px; letter-spacing: 0.08em; }
+.lb-icon-button[aria-pressed="true"]:not(:hover) { color: var(--lb-accent) !important; }
+.lb-detail .lb-icon-button { width: 32px; height: 32px; font-size: 13px; }
+/* Les glyphes cappuccicons ont une ligne de texte autour d'eux : on la retire pour les centrer */
+.lb-icon-button .cp { display: block; line-height: 1; }
+.lb-icon-button .cp::before { display: block; }
+
+/* Bouton lune / soleil : on montre le thème vers lequel on bascule */
+.lb-theme-icon {
+  width: 15px; height: 15px;
+  background: currentColor;
+  -webkit-mask: var(--lb-icone-soleil) center / contain no-repeat;
+  mask: var(--lb-icone-soleil) center / contain no-repeat;
+}
+[data-color-scheme="light"] .lb-theme-icon {
+  -webkit-mask-image: var(--lb-icone-lune);
+  mask-image: var(--lb-icone-lune);
+}
+
+.lb button:focus-visible { outline: 1px solid var(--lb-accent); outline-offset: 2px; }
+
+.lb-status {
+  position: fixed;
+  left: 50%; bottom: 24px;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 8px 14px;
+  border: var(--lb-cadre);
+  background: var(--lb-voile);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-family: var(--lb-font-mono);
+  font-size: 12px;
+  color: var(--lb-discret);
+  z-index: 5;
+  transition: opacity 0.4s;
+}
+.lb-status:empty { opacity: 0; pointer-events: none; }
+
+/* --- Contrôles MapLibre --------------------------------------------------- */
+
+.lb .maplibregl-ctrl-attrib { background: var(--lb-voile); color: var(--lb-discret); font-size: 10.5px; }
+.lb .maplibregl-ctrl-attrib a { color: var(--lb-discret); }
+.lb .maplibregl-ctrl-attrib-button { filter: invert(1); }
+[data-color-scheme="light"] .lb .maplibregl-ctrl-attrib-button { filter: none; }
+
+/* --- Animations ----------------------------------------------------------- */
+
+@keyframes lb-rise { from { opacity: 0; transform: translateY(12px); } }
+@keyframes lb-slide { from { opacity: 0; transform: translateX(16px); } }
+@keyframes lb-fade { from { opacity: 0; } }
+@keyframes lb-pop { from { opacity: 0; transform: scale(0.4); } }
+@keyframes lb-ring {
+  0% { opacity: 0.8; transform: scale(0.6); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lb *, .lb *::before, .lb *::after { animation: none !important; transition: none !important; }
+}
+
+/* --- Mobile --------------------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .lb-panel {
+    top: auto; left: 0; right: 0; bottom: 0;
+    width: auto;
+    max-height: 74vh;
+    border-width: 1px 0 0;
+    border-top-color: var(--lb-accent);
+  }
+  .lb-panel__head { display: none; }
+  .lb-panel__handle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 18px !important;
+    border: 0;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+  }
+  .lb-panel__handle .lb-brand { flex: 1; }
+  .lb-panel__handle .lb-brand__title { margin-top: 4px; font-size: 36px; }
+  .lb-panel__count { font-family: var(--lb-font-mono); font-size: 12px; color: var(--lb-discret); }
+  .lb-panel__chevron { transition: transform 0.3s; color: var(--lb-accent); }
+  .lb-panel.is-open .lb-panel__chevron { transform: rotate(180deg); }
+  .lb-panel__body { display: none; border-top: var(--lb-cadre); }
+  .lb-panel.is-open .lb-panel__body { display: flex; }
+  .lb-section { padding: 14px 18px 2px; }
+
+  .lb-detail {
+    top: auto; right: 0; left: 0; bottom: 0;
+    width: auto;
+    max-height: 72vh;
+    border-width: 1px 0 0;
+    border-top-color: var(--lb-accent);
+    animation-name: lb-rise;
+  }
+
+  .lb-controls { top: 16px; right: 12px; bottom: auto; }
+  .lb-status { top: 16px; bottom: auto; }
+  .lb .maplibregl-ctrl-bottom-right { top: 6px; left: 0; right: auto; bottom: auto; }
+  .lb .maplibregl-ctrl-bottom-right .maplibregl-ctrl { margin: 10px 0 0 10px; }
+}

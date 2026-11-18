@@ -1,0 +1,106 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "mercer-key",
+        "name": "Mercer Key",
+        "color": "#c9ad72",
+        "tagline": "Vieilles fortunes, résidences sécurisées, marinas privées, juges et influenceurs.",
+        "label": [-80.1625, 25.6960]
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [[[-80.1800, 25.7480], [-80.1360, 25.7480], [-80.1360, 25.6500], [-80.1950, 25.6500], [-80.1950, 25.7300], [-80.1800, 25.7400], [-80.1800, 25.7480]]],
+          [[[-80.1520, 25.7625], [-80.1290, 25.7615], [-80.1290, 25.7530], [-80.1520, 25.7530], [-80.1520, 25.7625]]],
+          [[[-80.1700, 25.7880], [-80.1700, 25.7776], [-80.1560, 25.7750], [-80.1470, 25.7732], [-80.1470, 25.7880], [-80.1700, 25.7880]]]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "crownline",
+        "name": "Crownline",
+        "color": "#8fb0cc",
+        "tagline": "La City : sièges sociaux, finance, promoteurs et hôtels de luxe.",
+        "label": [-80.1925, 25.7660]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [[-80.1955, 25.7900], [-80.1955, 25.7790], [-80.2000, 25.7760], [-80.2060, 25.7700], [-80.2080, 25.7480], [-80.1830, 25.7480], [-80.1830, 25.7900], [-80.1955, 25.7900]]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "lowbank",
+        "name": "Lowbank",
+        "color": "#d39274",
+        "tagline": "Street life, petits commerces, logements délabrés et tensions immobilières.",
+        "label": [-80.2330, 25.7680]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [[-80.2080, 25.7480], [-80.2650, 25.7480], [-80.2650, 25.8250], [-80.2060, 25.8250], [-80.2060, 25.7955], [-80.2030, 25.7955], [-80.1955, 25.7900], [-80.1955, 25.7790], [-80.2000, 25.7760], [-80.2060, 25.7700], [-80.2080, 25.7480]],
+          [[-80.2440, 25.8000], [-80.2470, 25.7955], [-80.2266, 25.7835], [-80.2075, 25.7745], [-80.2075, 25.7805], [-80.2266, 25.7895], [-80.2440, 25.8000]]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "calder-docks",
+        "name": "Calder Docks",
+        "color": "#78b3a5",
+        "tagline": "Dockers, syndicats, trafic et économie parallèle.",
+        "label": [-80.1660, 25.7700]
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [[[-80.1830, 25.7805], [-80.1720, 25.7770], [-80.1560, 25.7744], [-80.1440, 25.7722], [-80.1440, 25.7655], [-80.1830, 25.7655], [-80.1830, 25.7805]]],
+          [[[-80.2440, 25.8000], [-80.2266, 25.7895], [-80.2075, 25.7805], [-80.2075, 25.7745], [-80.2266, 25.7835], [-80.2470, 25.7955], [-80.2440, 25.8000]]]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "nighttown",
+        "name": "Nighttown",
+        "color": "#c992c4",
+        "tagline": "Clubs, bars, artistes, travailleurs de nuit et tourisme.",
+        "label": [-80.1320, 25.7880]
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [[[-80.1440, 25.7632], [-80.1150, 25.7632], [-80.1150, 25.8150], [-80.1480, 25.8150], [-80.1480, 25.7745], [-80.1440, 25.7745], [-80.1440, 25.7632]]],
+          [[[-80.2060, 25.8250], [-80.2060, 25.7955], [-80.2030, 25.7955], [-80.1955, 25.7900], [-80.1830, 25.7900], [-80.1830, 25.8250], [-80.2060, 25.8250]]]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "westline-county",
+        "name": "Westline County",
+        "color": "#b8b07c",
+        "tagline": "Motels, routes, garages, bourgs périurbains et drifters.",
+        "label": [-80.3450, 25.8050]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [[-80.2650, 25.7000], [-80.2650, 25.8800], [-80.4500, 25.8800], [-80.4500, 25.7000], [-80.2650, 25.7000]]
+        ]
+      }
+    }
+  ]
+}
